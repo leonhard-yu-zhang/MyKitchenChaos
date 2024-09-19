@@ -10,10 +10,42 @@ public class Player : MonoBehaviour
     // editable in the Unity Inspector (Editor) window
     [SerializeField] private float moveSpeed = 0.5f;
     [SerializeField] private GameInput gameInput;
-    [SerializeField] private LayerMask countersLayewrMask;
+    [SerializeField] private LayerMask countersLayerMask;
 
     private bool isWalking;
     private Vector3 lastInteractDir;
+    
+    // listen to the event in GameInput.cs
+    private void Start() // Start not Awake
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
+
+        if (moveDir != Vector3.zero)
+        {
+            lastInteractDir = moveDir;
+        }
+        float interactDistance = 2f;
+
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        {
+            // a Tranform component is attached to a GameObject,
+            // get the component of type T on the same GameObject
+            // here is the GameObject is ClearCounter
+            // if get, return true
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                //Has ClearCounter
+                clearCounter.Interact();
+
+            }
+        }
+    }
 
     private void Update()
     {
@@ -33,23 +65,38 @@ public class Player : MonoBehaviour
 
         if (moveDir != Vector3.zero)
         {
+            // if there is no input to control the move direction, we can still
+            // the last input move direction
             lastInteractDir = moveDir;
         }
         float interactDistance = 2f;
-        if(Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayewrMask))
+
+        /* Raycast is a method used to detect objects along a path, or ray, cast from a point in a specific direction. 
+         * If the ray intersects with any objects (like 3D models with colliders), it returns information about the hit, 
+         * such as the object it hit, the point of contact, and the distance to the hit object.
+         * note the out keyword
+         * 
+         * layerMask: set a certain game object to a specific layer to make sure the raycast will only hit
+         * objects within that layer. Anything not on that layer will be ignored
+         */
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
+            // a Tranform component is attached to a GameObject,
+            // get the component of type T on the same GameObject
+            // here is the GameObject is ClearCounter
+            // if get, return true
             if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 //Has ClearCounter
-                clearCounter.Interact();
+                // clearCounter.Interact();
 
             }
-            Debug.Log(raycastHit.transform);
+            // Debug.Log(raycastHit.transform);
         }
-        else
-        {
-            Debug.Log("-");
-        }
+        // else
+        // {
+            // Debug.Log("-");
+        // }
     }
     private void HandleMovement()
     {

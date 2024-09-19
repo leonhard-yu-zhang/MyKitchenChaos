@@ -11,13 +11,15 @@ public class GameInput : MonoBehaviour
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
+        // there exists public event Action<CallbackContext> performed
+        // delegate void Action<CallbackContext>(CallbackContext obj) returns void
         playerInputActions.Player.Interact.performed += Interact_performed;
     }
 
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
 /*        // another option
-        if (OnInteractAction != null)
+        if (OnInteractAction != null) // there exist subscribers
         {
             OnInteractAction(this, EventArgs.Empty);
         }*/

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,44 +7,55 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    /*singleton pattern*/
+    public static Player Instance { get; private set; }
+
+
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs: EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
+
     // [SerializeField]: serialize private fields, making them visible and
     // editable in the Unity Inspector (Editor) window
-    [SerializeField] private float moveSpeed = 0.5f;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameInput gameInput;
-    [SerializeField] private LayerMask countersLayerMask;
+    [SerializeField] private LayerMask countersLayerMask; // interact with clear counter put on the Counter layer 
 
-    private bool isWalking;
+    private bool isWalking;  // the player is walking when moveDir is nonzero
     private Vector3 lastInteractDir;
-    
-    // listen to the event in GameInput.cs
+
+    private ClearCounter selectedCounter;
+
+    /* singleton pattern, notice it is in Awake */
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("There is more than one Player instance");
+        }
+        Instance = this; // this is a reference that points to the current instance of the class
+    }
+
     private void Start() // Start not Awake
     {
+        // the subscriber Player adds the event handler GameInput_OnInteractAction to the event
+        // OnInteractAction in the publisher gameInput
         gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
-
-        if (moveDir != Vector3.zero)
+        /* Press a key mapping to the Interact action,
+         * the performed event is triggered, it calls method Interact_performed in class
+         * GameInput.
+         * Exectued method Interact_performed raises the OnInteractAction event,
+         * it calls method GameInput_OnInteractAction in class Player
+         */
+        if (selectedCounter!=null)
         {
-            lastInteractDir = moveDir;
-        }
-        float interactDistance = 2f;
-
-        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
-        {
-            // a Tranform component is attached to a GameObject,
-            // get the component of type T on the same GameObject
-            // here is the GameObject is ClearCounter
-            // if get, return true
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                //Has ClearCounter
-                clearCounter.Interact();
-
-            }
+            selectedCounter.Interact();
         }
     }
 
@@ -65,7 +77,7 @@ public class Player : MonoBehaviour
 
         if (moveDir != Vector3.zero)
         {
-            // if there is no input to control the move direction, we can still
+            // if there is no input to control the move direction, we can still use
             // the last input move direction
             lastInteractDir = moveDir;
         }
@@ -79,19 +91,28 @@ public class Player : MonoBehaviour
          * layerMask: set a certain game object to a specific layer to make sure the raycast will only hit
          * objects within that layer. Anything not on that layer will be ignored
          */
+
         if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
             // a Tranform component is attached to a GameObject,
-            // get the component of type T on the same GameObject
-            // here is the GameObject is ClearCounter
-            // if get, return true
-            if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            // get the component of type T on the same GameObject,  if get, return true
+            // GameObject ClearCounter has the component ClearCounter.cs
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                //Has ClearCounter
-                // clearCounter.Interact();
-
+                if (clearCounter!= selectedCounter) // detected clearCounter on the way changed
+                {
+                    SetSelectedCounter(clearCounter);
+                }
+                else
+                {
+                    SetSelectedCounter(null);
+                }
             }
-            // Debug.Log(raycastHit.transform);
+            else
+            {
+                SetSelectedCounter(null);
+            }
+            Debug.Log($"selectedCounter after setting: {selectedCounter}");
         }
         // else
         // {
@@ -139,6 +160,7 @@ public class Player : MonoBehaviour
                     transform.position += moveDir * Time.deltaTime * moveSpeed;
                 }*/
         float playerHeight = 2f;
+
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
         // solve the problem while moving diagonally
         if (!canMove)
@@ -177,5 +199,21 @@ public class Player : MonoBehaviour
 
         // walking when move direction is not zero
         isWalking = moveDir != Vector3.zero;
+    }
+
+    // in method SetSelectedCounter in publisher class Player, event OnSelectedCounterChanged is raised.
+    // then method Player_OnSelectedCounterChanged in subscriber class SelectedCounterVisual is invoked to change the visual effect
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+
+        /* object initializer
+         * new OnSelectedCounterChangedEventArgs { selectedCounter = selectedCounter }
+         * is equivalent to 
+         * var eventArgs = new OnSelectedCounterChangedEventArgs();
+         * eventArgs.selectedCounter = selectedCounter;
+         */
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        { selectedCounter = selectedCounter });
     }
 }

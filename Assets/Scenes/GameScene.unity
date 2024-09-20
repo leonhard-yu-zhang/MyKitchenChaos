@@ -228,11 +228,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &127134730 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8489950181604613947, guid: 341148fbb7d442f4b9ec907619c15ccc,
+    type: 3}
+  m_PrefabInstance: {fileID: 3016499237310248205}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &128911915 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3294758251327466532, guid: 1c5dda3c7cd3cf742afcade5419faeab,
     type: 3}
   m_PrefabInstance: {fileID: 1845950575}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &159719734 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7294521129931531591, guid: 341148fbb7d442f4b9ec907619c15ccc,
+    type: 3}
+  m_PrefabInstance: {fileID: 3016499237310248205}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
@@ -414,6 +426,23 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2782231966850626538, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: tomatoPrefab
+      value: 
+      objectReference: {fileID: 3387100880984044220, guid: 3b10898766d7aa14387e6cc159b5103d,
+        type: 3}
+    - target: {fileID: -2782231966850626538, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: counterTopPoint
+      value: 
+      objectReference: {fileID: 1906965174}
+    - target: {fileID: -2782231966850626538, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: kitchenObjectSO
+      value: 
+      objectReference: {fileID: 11400000, guid: c56b331ae071a2e4186032a230645753,
+        type: 2}
     - target: {fileID: 222639130608427908, guid: 341148fbb7d442f4b9ec907619c15ccc,
         type: 3}
       propertyPath: m_Name
@@ -757,7 +786,7 @@ Transform:
   m_GameObject: {fileID: 737038428}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.140918, y: -0.33619738, z: -1.1906314}
+  m_LocalPosition: {x: 2.140918, y: 0, z: -1.1906314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -778,6 +807,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 6
   gameInput: {fileID: 601591786}
+  countersLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1037,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 876995317}
   m_SourcePrefab: {fileID: 100100000, guid: 1c5dda3c7cd3cf742afcade5419faeab, type: 3}
+--- !u!4 &1906965174 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8489950181604613947, guid: 341148fbb7d442f4b9ec907619c15ccc,
+    type: 3}
+  m_PrefabInstance: {fileID: 398756068}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3016499237310248205
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1013,6 +1051,23 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2782231966850626538, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: tomatoPrefab
+      value: 
+      objectReference: {fileID: 3387100880984044220, guid: 43afe36f317faae41a706d2725bd6d61,
+        type: 3}
+    - target: {fileID: -2782231966850626538, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: counterTopPoint
+      value: 
+      objectReference: {fileID: 127134730}
+    - target: {fileID: -2782231966850626538, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: kitchenObjectSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 30671ee5f605cb54b9e884177b8295bb,
+        type: 2}
     - target: {fileID: 222639130608427908, guid: 341148fbb7d442f4b9ec907619c15ccc,
         type: 3}
       propertyPath: m_Name
@@ -1068,6 +1123,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7372314954551612807, guid: 341148fbb7d442f4b9ec907619c15ccc,
+        type: 3}
+      propertyPath: visualGameObject
+      value: 
+      objectReference: {fileID: 159719734}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

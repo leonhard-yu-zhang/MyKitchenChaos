@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
     /*singleton pattern*/
     public static Player Instance { get; private set; }
@@ -22,11 +22,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask; // interact with clear counter put on the Counter layer 
+    [SerializeField] private Transform kitchenObjectHoldPoint;
 
     private bool isWalking;  // the player is walking when moveDir is nonzero
     private Vector3 lastInteractDir;
 
     private ClearCounter selectedCounter;
+
+    private KitchenObject kitchenObject;
 
     /* singleton pattern, notice it is in Awake */
     private void Awake()
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour
          */
         if (selectedCounter!=null)
         {
-            selectedCounter.Interact();
+            selectedCounter.Interact(this);
         }
     }
 
@@ -215,5 +218,30 @@ public class Player : MonoBehaviour
          */
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
         { selectedCounter = selectedCounter });
+    }
+
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+       return kitchenObject != null;
     }
 }

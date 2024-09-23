@@ -8,13 +8,13 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectParent
     // [SerializeField] private Transform tomatoPrefab;
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
     [SerializeField] private Transform counterTopPoint;
-    [SerializeField] private ClearCounter secondClearCounter;
-    [SerializeField] private bool testing;
+/*    [SerializeField] private ClearCounter secondClearCounter;
+    [SerializeField] private bool testing;*/
 
     // the kitchen object on the current counter
     private KitchenObject kitchenObject;
 
-    private void Update()
+ /*   private void Update()
     {
         // When the T key is pressed, set the parent of the kitchen object on the current counter
         // to another counter in order to move its position
@@ -26,8 +26,8 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectParent
                 kitchenObject.SetKitchenObjectParent(secondClearCounter);
             }
         }
-    }
-    public void Interact()
+    }*/
+    public void Interact(Player player)
     {
         if (kitchenObject == null) // generate a kitchen object if there is no one
         {
@@ -50,6 +50,7 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectParent
             // Debug.Log(kitchenObject.GetClearCounter());
             Debug.Log(kitchenObject.GetKitchenObjectParent());
             // when interacting, give the kitchen object on the counter to the player
+            kitchenObject.SetKitchenObjectParent(player);
         }
 
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ClearCounter : MonoBehaviour
+public class ClearCounter : MonoBehaviour, IKitchenObjectParent
 {
     // [SerializeField] private Transform tomatoPrefab;
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
@@ -22,7 +22,8 @@ public class ClearCounter : MonoBehaviour
         {
             if(kitchenObject != null)
             {
-                kitchenObject.SetClearCounter(secondClearCounter);
+                // kitchenObject.SetClearCounter(secondClearCounter);
+                kitchenObject.SetKitchenObjectParent(secondClearCounter);
             }
         }
     }
@@ -36,16 +37,19 @@ public class ClearCounter : MonoBehaviour
             
             // e.g. instantiate a tomato prefab
             Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, counterTopPoint);
-/*            kitchenObjectTranform.localPosition = Vector3.zero;
-            *//*            Debug.Log(kitchenObjectTranform.GetComponent<KitchenObject>().
-                            GetKitchenObjectSO().objectName);*//*
-            kitchenObject = kitchenObjectTranform.GetComponent<KitchenObject>();
-            kitchenObject.SetClearCounter(this);*/
-            kitchenObjectTransform.GetComponent<KitchenObject>().SetClearCounter(this);
+            /*            kitchenObjectTranform.localPosition = Vector3.zero;
+                        *//*            Debug.Log(kitchenObjectTranform.GetComponent<KitchenObject>().
+                                        GetKitchenObjectSO().objectName);*//*
+                        kitchenObject = kitchenObjectTranform.GetComponent<KitchenObject>();
+                        kitchenObject.SetClearCounter(this);*/
+            // kitchenObjectTransform.GetComponent<KitchenObject>().SetClearCounter(this);
+            kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
         }
         else
         {
-            Debug.Log(kitchenObject.GetClearCounter());
+            // Debug.Log(kitchenObject.GetClearCounter());
+            Debug.Log(kitchenObject.GetKitchenObjectParent());
+            // when interacting, give the kitchen object on the counter to the player
         }
 
     }

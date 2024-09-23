@@ -7,17 +7,20 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    // the counter where the kitchen object is placed
-    private ClearCounter clearCounter;
+    // // the counter where the kitchen object is placed
+    // private ClearCounter clearCounter;
+
+    private IKitchenObjectParent kitchenObjectParent;
+
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }
 
-    // set and get the counter where the kitchen object is placed 
+/*    // set and get the counter where the kitchen object is placed 
     public void SetClearCounter(ClearCounter clearCounter)
     {
-/*        this.clearCounter = clearCounter;*/
+*//*        this.clearCounter = clearCounter;*//*
 
         if (this.clearCounter != null) // the previous counter
         {
@@ -41,5 +44,31 @@ public class KitchenObject : MonoBehaviour
     public ClearCounter GetClearCounter()
     {
         return clearCounter;
+    }*/
+
+    public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
+    {
+        // decouple the kitchen object from the old kitchen object parent
+        // couple it with the new kitchen object parent
+        if(this.kitchenObjectParent != null)
+        {
+            this.kitchenObjectParent.ClearKitchenObject();
+        }
+        this.kitchenObjectParent = kitchenObjectParent;
+
+        if (kitchenObjectParent.HasKitchenObject())
+        {
+            Debug.LogError("already has a KitchenObject as child");
+        }
+        kitchenObjectParent.SetKitchenObject(this);
+
+        // parent-child relationship between Transform components
+        transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
+        transform.localPosition = Vector3.zero;
+    }
+
+    public IKitchenObjectParent GetKitchenObjectParent()
+    {
+        return kitchenObjectParent;
     }
 }

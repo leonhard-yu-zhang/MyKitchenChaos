@@ -14,7 +14,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs: EventArgs
     {
-        public ClearCounter selectedCounter;
+        // public ClearCounter selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
     // [SerializeField]: serialize private fields, making them visible and
@@ -27,7 +28,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private bool isWalking;  // the player is walking when moveDir is nonzero
     private Vector3 lastInteractDir;
 
-    private ClearCounter selectedCounter;
+    // private ClearCounter selectedCounter;
+    private BaseCounter selectedCounter;
 
     private KitchenObject kitchenObject;
 
@@ -95,16 +97,18 @@ public class Player : MonoBehaviour, IKitchenObjectParent
          * objects within that layer. Anything not on that layer will be ignored
          */
 
-        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
             // a Tranform component is attached to a GameObject,
             // get the component of type T on the same GameObject,  if get, return true
             // GameObject ClearCounter has the component ClearCounter.cs
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+
+            // if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
-                if (clearCounter!= selectedCounter) // detected clearCounter on the way changed
+                if (baseCounter!= selectedCounter) // detected clearCounter on the way changed
                 {
-                    SetSelectedCounter(clearCounter);
+                    SetSelectedCounter(baseCounter);
                 }
                 else
                 {
@@ -206,7 +210,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     // in method SetSelectedCounter in publisher class Player, event OnSelectedCounterChanged is raised.
     // then method Player_OnSelectedCounterChanged in subscriber class SelectedCounterVisual is invoked to change the visual effect
-    private void SetSelectedCounter(ClearCounter selectedCounter)
+    // private void SetSelectedCounter(ClearCounter selectedCounter)
+    private void SetSelectedCounter(BaseCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;
 

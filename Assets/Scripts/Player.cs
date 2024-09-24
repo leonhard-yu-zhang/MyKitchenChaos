@@ -24,15 +24,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask; // interact with clear counter put on the Counter layer 
     [SerializeField] private Transform kitchenObjectHoldPoint;
-
     private bool isWalking;  // the player is walking when moveDir is nonzero
     private Vector3 lastInteractDir;
 
     // private ClearCounter selectedCounter;
     private BaseCounter selectedCounter;
-
     private KitchenObject kitchenObject;
-
     /* singleton pattern, notice it is in Awake */
     private void Awake()
     {
@@ -48,6 +45,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         // the subscriber Player adds the event handler GameInput_OnInteractAction to the event
         // OnInteractAction in the publisher gameInput
         gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
@@ -61,6 +59,20 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if (selectedCounter!=null)
         {
             selectedCounter.Interact(this);
+        }
+    }
+
+    private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e)
+    {
+        /* Press a key mapping to the Interact action,
+         * the performed event is triggered, it calls method Interact_performed in class
+         * GameInput.
+         * Exectued method Interact_performed raises the OnInteractAction event,
+         * it calls method GameInput_OnInteractAction in class Player
+         */
+        if (selectedCounter != null)
+        {
+            selectedCounter.InteractAlternate(this);
         }
     }
 
@@ -97,7 +109,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
          * objects within that layer. Anything not on that layer will be ignored
          */
 
-        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
             // a Tranform component is attached to a GameObject,
             // get the component of type T on the same GameObject,  if get, return true
@@ -247,6 +259,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     public bool HasKitchenObject()
     {
-       return kitchenObject != null;
+        return kitchenObject != null;
     }
 }

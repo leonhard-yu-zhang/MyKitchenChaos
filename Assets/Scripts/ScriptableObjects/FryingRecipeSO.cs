@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu()]
-public class CuttingRecipeSO : ScriptableObject
+public class FryingRecipeSO : ScriptableObject
 {
     public KitchenObjectSO input;
     public KitchenObjectSO output;
-    public int cuttingProgessMax; // how many cuts are needed to completely cut the kitchen object
+    public float fryingTimeMax; // how much time is needed to completely cook the kitchen object
 }
